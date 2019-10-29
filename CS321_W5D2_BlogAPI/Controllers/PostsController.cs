@@ -137,14 +137,13 @@ namespace CS321_W5D2_BlogAPI.Controllers
             try
             {
                 _postService.Add(postModel.ToDomainModel());
-                return CreatedAtAction("Get", new { id = postModel.Id });
+                return CreatedAtAction("Get", new { id = postModel.Id }, postModel);
             }
             catch(Exception ex)
             {
-            ModelState.AddModelError("AddPost", ex.Message);
+            ModelState.AddModelError("AddPost", ex.GetBaseException().Message);
             return BadRequest(ModelState);
             }
-
         }
 
         // PUT /api/blogs/{blogId}/posts/{postId}
@@ -169,8 +168,18 @@ namespace CS321_W5D2_BlogAPI.Controllers
         public IActionResult Delete(int blogId, int postId)
         {
             // TODO: replace the code below with the correct implementation
-            ModelState.AddModelError("DeletePost", "Fix Me! Implement DELETE /api/blogs{blogId}/posts/{postId}");
-            return BadRequest(ModelState);
+            try
+            {
+            _postService.Remove(postId);
+            return NoContent();
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("DeletePost", ex.Message);
+                return BadRequest(ModelState);
+            }
+            //ModelState.AddModelError("DeletePost", "Fix Me! Implement DELETE /api/blogs{blogId}/posts/{postId}");
+            //return BadRequest(ModelState);
         }
     }
 }
