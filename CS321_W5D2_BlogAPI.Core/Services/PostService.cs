@@ -65,7 +65,7 @@ namespace CS321_W5D2_BlogAPI.Core.Services
             }
             else
             {
-                throw new Exception("You dont have permission!")
+                throw new Exception("You dont have permission!");
             }
 
         }
@@ -77,7 +77,7 @@ namespace CS321_W5D2_BlogAPI.Core.Services
             var blog = _blogRepository.Get(updatedPost.BlogId);
             if(currentUserId == blog.UserId)
             {
-                return _postRepository.Update(updatedPost)   
+                return _postRepository.Update(updatedPost);   
             }
             else
             {
