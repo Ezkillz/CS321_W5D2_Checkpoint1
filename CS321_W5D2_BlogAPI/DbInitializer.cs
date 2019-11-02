@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CS321_W5D2_BlogAPI
 {
-    public class DbInitializer
+    public class dbInitializer
     {
 
         private readonly IPostRepository _postRepo;
@@ -15,7 +15,7 @@ namespace CS321_W5D2_BlogAPI
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IBlogRepository _blogRepo;
 
-        public DbInitializer(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, IBlogRepository blogRepo, IPostRepository postRepo)
+        public dbInitializer(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, IBlogRepository blogRepo, IPostRepository postRepo)
         {
             _userManager = userManager;
             _roleManager = roleManager;

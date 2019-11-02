@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using CS321_W5D2_BlogAPI.Core.Models;
 using CS321_W5D2_BlogAPI.Core.Services;
@@ -38,28 +39,47 @@ namespace CS321_W5D2_BlogAPI
             services.AddHttpContextAccessor();
 
             // TODO: add your DbContext
+            services.AddDbContext<AppDbContext>();
 
             // TODO: add identity services
+            services.AddIdentity<AppUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>();
 
             // TODO: add JWT support
-
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                };
+            });
 
             services.AddScoped<IUserService, UserService>();
 
             // TODO: add the DbInititializer service
+            services.AddScoped<dbInitializer>();
 
             // TODO: add your repositories and services
-            //services.AddScoped<IBlogRepository, BlogRepository>();
-            //services.AddScoped<IPostRepository, PostRepository>();
-            //services.AddScoped<IBlogService, BlogService>();
-            //services.AddScoped<IPostService, PostService>();
+            services.AddScoped<IBlogRepository, BlogRepository>();
+            services.AddScoped<IPostRepository, PostRepository>();
+            services.AddScoped<IBlogService, BlogService>();
+            services.AddScoped<IPostService, PostService>();
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env /*, DbInitializer dbInitializer*/)
-        {
-            if (env.IsDevelopment())
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env , DbInitializer dbInitializer) 
+        {           // DbInitializer was red and suggested I create a new DbIntit.cs or another class ... I choose a new class  
+            if (env.IsDevelopment())                            // I choose a new class
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -94,7 +114,15 @@ namespace CS321_W5D2_BlogAPI
             });
 
             // TODO: add call to dbInitializer
-
+            dbInitializer.Initialize();
+        }
+    }
+    // Just added the text below me on my own since the first DbInistializer in line 80 wouldnt work for some reason?
+    public class DbInitializer
+    {
+        internal void Initialize()
+        {
+            throw new NotImplementedException();
         }
     }
 }
